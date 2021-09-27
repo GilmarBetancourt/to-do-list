@@ -119,7 +119,7 @@ const addClickListenerCloseButton = (button) => {
     updatePersistentData(toDoList.getList());
     setTimeout(() => {
       refreshThePage();
-    }, 1000);
+    }, 200);
   });
 };
 
