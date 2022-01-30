@@ -24,5 +24,4 @@ export default class ToDoList {
       }
     }
   }
-  //To strikethrough the item
 }
