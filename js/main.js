@@ -99,10 +99,6 @@ const buildListItem = (item) => {
   check.id = item.getId();
   check.tabIndex = 0;
   check.isChecked = item.getChecked();
-  //To load checked checkboxes
-  checkCheckboxes(item, check);
-  //Listens for the check
-  addClickListenerCheckbox(check);
 
   //Creates the label for the checkbox
   const label = document.createElement("label");
@@ -117,6 +113,10 @@ const buildListItem = (item) => {
 
   //Listens for the x button
   addClickListenerCloseButton(closeButton);
+  //To load checked checkboxes
+  checkCheckboxes(item, check);
+  //Listens for the check
+  addClickListenerCheckbox(check);
 
   div.appendChild(check);
   div.appendChild(label);
@@ -129,10 +129,12 @@ const buildListItem = (item) => {
 
 const addClickListenerCloseButton = (button) => {
   button.addEventListener("click", () => {
-    toDoList.updateCheckboxes(button.id, false);
+    checkboxStat = false;
+    toDoList.updateCheckboxes(button.id, checkboxStat);
     toDoList.removeItemFromList(button.id);
     //Remove from persistent data
     updatePersistentData(toDoList.getList());
+
     setTimeout(() => {
       refreshThePage();
     }, 200);
@@ -146,7 +148,6 @@ const addClickListenerCheckbox = (checkbox) => {
     checkboxStat = checkbox.checked;
     toDoList.updateCheckboxes(checkbox.id, checkboxStat);
     updatePersistentData(toDoList.getList());
-    console.log(window.localStorage);
   });
 };
 
