@@ -2,6 +2,8 @@ export default class ToDoItem {
   constructor() {
     this._id = null;
     this._item = null;
+    //To save the checked
+    this._isChecked = false;
   }
 
   getId() {
@@ -18,5 +20,15 @@ export default class ToDoItem {
 
   setItem(item) {
     this._item = item;
+  }
+
+  //To get the checkbox status
+  getChecked() {
+    return this._isChecked;
+  }
+
+  //To set the checkbox status
+  setChecked(checkboxBool) {
+    this._isChecked = checkboxBool;
   }
 }

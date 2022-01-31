@@ -2,6 +2,8 @@ import ToDoList from "./todolist.js";
 import ToDoItem from "./todoitem.js";
 
 const toDoList = new ToDoList();
+const todoitem = new ToDoItem();
+let checkboxStat = false;
 
 // Launch app
 
@@ -48,7 +50,11 @@ const loadListObject = () => {
   if (typeof storedList !== "string") return;
   const parsedList = JSON.parse(storedList);
   parsedList.forEach((itemObj) => {
-    const newToDoItem = createNewItem(itemObj._id, itemObj._item);
+    const newToDoItem = createNewItem(
+      itemObj._id,
+      itemObj._item,
+      itemObj._isChecked
+    );
     toDoList.addItemToList(newToDoItem);
   });
 };
@@ -80,21 +86,30 @@ const renderList = () => {
   });
 };
 
+//Building a new to do item
+
 const buildListItem = (item) => {
   //Create the element
   const div = document.createElement("div");
   div.className = "item";
 
+  //Creates the checkbox
   const check = document.createElement("input");
   check.type = "checkbox";
   check.id = item.getId();
   check.tabIndex = 0;
+  check.isChecked = item.getChecked();
+  //To load checked checkboxes
+  checkCheckboxes(item, check);
+  //Listens for the check
+  addClickListenerCheckbox(check);
 
+  //Creates the label for the checkbox
   const label = document.createElement("label");
   label.htmlFor = item.getId();
   label.textContent = item.getItem();
 
-  //Create the close button
+  //Creates the close button
   const closeButton = document.createElement("button");
   closeButton.appendChild(document.createTextNode("X"));
   closeButton.className = "closeButton";
@@ -113,7 +128,8 @@ const buildListItem = (item) => {
 //To remove each item
 
 const addClickListenerCloseButton = (button) => {
-  button.addEventListener("click", (event) => {
+  button.addEventListener("click", () => {
+    toDoList.updateCheckboxes(button.id, false);
     toDoList.removeItemFromList(button.id);
     //Remove from persistent data
     updatePersistentData(toDoList.getList());
@@ -121,6 +137,26 @@ const addClickListenerCloseButton = (button) => {
       refreshThePage();
     }, 200);
   });
+};
+
+//To listen to checkbox changes and store it.
+
+const addClickListenerCheckbox = (checkbox) => {
+  checkbox.addEventListener("change", () => {
+    checkboxStat = checkbox.checked;
+    toDoList.updateCheckboxes(checkbox.id, checkboxStat);
+    updatePersistentData(toDoList.getList());
+    console.log(window.localStorage);
+  });
+};
+
+//To load the stored checkboxes
+const checkCheckboxes = (item, checkbox) => {
+  if (window.localStorage != "[]") {
+    if (item.getChecked() == true) {
+      checkbox.checked = "checked";
+    }
+  }
 };
 
 const updatePersistentData = (listArray) => {
@@ -139,7 +175,8 @@ const processSubmission = () => {
   const newEntryText = getNewEntry();
   if (!newEntryText.length) return;
   const nextItemId = calcNextItemId();
-  const toDoItem = createNewItem(nextItemId, newEntryText);
+  const nextItemCheckbox = checkboxStat;
+  const toDoItem = createNewItem(nextItemId, newEntryText, nextItemCheckbox);
   toDoList.addItemToList(toDoItem);
   //Update persistent data
   updatePersistentData(toDoList.getList());
@@ -161,9 +198,11 @@ const calcNextItemId = () => {
   return nextItemId;
 };
 
-const createNewItem = (itemId, itemText) => {
+const createNewItem = (itemId, itemText, itemCheckbox) => {
   const toDo = new ToDoItem();
   toDo.setId(itemId);
   toDo.setItem(itemText);
+  toDo.setChecked(itemCheckbox);
+
   return toDo;
 };

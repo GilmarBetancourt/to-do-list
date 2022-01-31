@@ -1,0 +1,18 @@
+		Function to Save the Checks
+
+
+*Create a field for each todo object called: tickedCheckbox.
+
+*When creating the todo item:
+  - Create an event listener for the checkbox
+  - Use function to store the "checked" attribute for the item in an array.
+
+
+*Function to reset the checked attribute:
+  - Get the checkbox id.
+  - Save "checked" attribute (true/false) in array variable.
+
+* When loading the item list:
+  - loop through the checkboxes 
+  - compare ids with ids in array
+  - reset the check attribute

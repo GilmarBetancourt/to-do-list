@@ -24,5 +24,15 @@ export default class ToDoList {
       }
     }
   }
-  //To strikethrough the item
+
+  //To update the checks
+  updateCheckboxes(id, checkStatus) {
+    const checklist = this._list;
+    for (let i = 0; i < checklist.length; i++) {
+      if (checklist[i]._id == id) {
+        checklist[i]._isChecked = checkStatus;
+        break;
+      }
+    }
+  }
 }
