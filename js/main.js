@@ -4,14 +4,12 @@ import ToDoItem from "./todoitem.js";
 const toDoList = new ToDoList();
 const todoitem = new ToDoItem();
 let checkboxStat = false;
-let counter = 0;
 
 // Launch app
 
 document.addEventListener("readystatechange", (event) => {
   if (event.target.readyState === "complete") {
     initApp();
-    counter = 0;
   }
 });
 
@@ -89,7 +87,7 @@ const renderList = () => {
 };
 
 //Building a new to do item
-//FIXME: items are adding twice.
+
 const buildListItem = (item) => {
   //Create the element
   const div = document.createElement("div");
@@ -125,8 +123,6 @@ const buildListItem = (item) => {
   div.appendChild(closeButton);
   const container = document.getElementById("listItems");
   container.appendChild(div);
-
-  console.log(window.localStorage);
 };
 
 //To remove each item
@@ -154,6 +150,7 @@ const addClickListenerCheckbox = (checkbox) => {
   });
 };
 
+//To load the stored checkboxes
 const checkCheckboxes = (item, checkbox) => {
   if (window.localStorage != "[]") {
     if (item.getChecked() == true) {
