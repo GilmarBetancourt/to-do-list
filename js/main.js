@@ -4,12 +4,14 @@ import ToDoItem from "./todoitem.js";
 const toDoList = new ToDoList();
 const todoitem = new ToDoItem();
 let checkboxStat = false;
+let counter = 0;
 
 // Launch app
 
 document.addEventListener("readystatechange", (event) => {
   if (event.target.readyState === "complete") {
     initApp();
+    counter = 0;
   }
 });
 
@@ -100,7 +102,7 @@ const buildListItem = (item) => {
   check.tabIndex = 0;
   check.isChecked = item.getChecked();
   //To load checked checkboxes
-  updateCheckboxes(check);
+  checkCheckboxes(item, check);
   //Listens for the check
   addClickListenerCheckbox(check);
 
@@ -131,6 +133,7 @@ const buildListItem = (item) => {
 
 const addClickListenerCloseButton = (button) => {
   button.addEventListener("click", () => {
+    toDoList.updateCheckboxes(button.id, false);
     toDoList.removeItemFromList(button.id);
     //Remove from persistent data
     updatePersistentData(toDoList.getList());
@@ -145,22 +148,17 @@ const addClickListenerCloseButton = (button) => {
 const addClickListenerCheckbox = (checkbox) => {
   checkbox.addEventListener("change", () => {
     checkboxStat = checkbox.checked;
-    todoitem._isChecked = checkboxStat;
-    let checkboxId = checkbox.id;
-    toDoList.getList()[checkboxId - 1]._isChecked = checkbox.checked;
-
+    toDoList.updateCheckboxes(checkbox.id, checkboxStat);
     updatePersistentData(toDoList.getList());
+    console.log(window.localStorage);
   });
 };
 
-const updateCheckboxes = (checkbox) => {
+const checkCheckboxes = (item, checkbox) => {
   if (window.localStorage != "[]") {
-    checkbox.isChecked = toDoList.getList()[checkbox.id - 1]._isChecked;
-    if (checkbox.isChecked == true) {
+    if (item.getChecked() == true) {
       checkbox.checked = "checked";
     }
-  } else {
-    checkbox.isChecked = checkboxStat;
   }
 };
 
